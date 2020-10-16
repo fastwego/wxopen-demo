@@ -11,3 +11,12 @@ A demo project for fastwego/wxopen
 - edit config in `.env.dist` file and rename to `.env`
 - run `wxopen-demo` & view `http://localhost`
 - that's all & good luck ;)
+
+### use case demo
+
+- [请求授权](auth.go)
+- [代 公众号 调用接口](menu.go)
+- [处理公众号 消息/通知](msg.go)
+- [代 公众号 发起网页授权](oauth.go)
+- [代代 公众号 使用 js-sdk](jssdk.go)
+- [代 小程序 调用接口](mini.go)

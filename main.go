@@ -22,11 +22,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 
-	"github.com/fastwego/offiaccount/type/type_message"
 	"github.com/fastwego/wxopen/type/type_platform"
 
 	"github.com/fastwego/wxopen"
@@ -83,14 +81,20 @@ func main() {
 	router.Use(gin.Logger(), gin.Recovery())
 	router.POST("/wechat/Auth/index", HandleEvent)
 
-	// 获取授权 demo
+	// 请求授权
 	router.GET("/api/wxopen/auth", AuthDemo)
 
 	// 代 公众号 调用接口
 	router.GET("/api/wxopen/menu", MenuDemo)
 
 	// 处理公众号 消息/通知
-	router.POST("/wechat/Message/index/:appid", HandleOffiAccountEvent)
+	router.POST("/wechat/Message/index/:appid", MsgDemo)
+
+	// 代 公众号 发起网页授权
+	router.GET("/api/wxopen/oauth/:appid", OauthDemo)
+
+	// 代 公众号 使用 js-sdk
+	router.GET("/api/wxopen/jssdk/:appid", Demo)
 
 	// 代 小程序 调用接口
 	router.GET("/api/wxopen/mini", MiniDemo)
@@ -118,40 +122,4 @@ func main() {
 	if err := svr.Shutdown(ctx); err != nil {
 		log.Fatalln(err)
 	}
-}
-
-func HandleOffiAccountEvent(c *gin.Context) {
-
-	// 区分不同账号
-	appid := c.Param("appid")
-
-	offiAccount, err := myPlatform.NewOffiAccount(appid)
-
-	// 调用相应公众号服务
-	body, _ := ioutil.ReadAll(c.Request.Body)
-	log.Println(string(body))
-
-	message, err := offiAccount.Server.ParseXML(body)
-	if err != nil {
-		log.Println(err)
-	}
-
-	var output interface{}
-	switch message.(type) {
-	case type_message.MessageText: // 文本 消息
-		msg := message.(type_message.MessageText)
-
-		// 回复文本消息
-		output = type_message.ReplyMessageText{
-			ReplyMessage: type_message.ReplyMessage{
-				ToUserName:   type_message.CDATA(msg.FromUserName),
-				FromUserName: type_message.CDATA(msg.ToUserName),
-				CreateTime:   strconv.FormatInt(time.Now().Unix(), 10),
-				MsgType:      type_message.ReplyMsgTypeText,
-			},
-			Content: type_message.CDATA(msg.Content),
-		}
-	}
-
-	myPlatform.Server.Response(c.Writer, c.Request, output)
 }
