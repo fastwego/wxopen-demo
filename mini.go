@@ -15,7 +15,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/fastwego/miniprogram/apis/operation"
 
@@ -28,7 +28,7 @@ func MiniDemo(c *gin.Context) {
 	appid := c.Request.URL.Query().Get("appid")
 
 	if len(appid) == 0 {
-		fmt.Println("appid not found")
+		log.Println("appid not found")
 		return
 	}
 
@@ -38,7 +38,7 @@ func MiniDemo(c *gin.Context) {
 	}
 
 	feedback, err := operation.GetFeedback(mini)
-	fmt.Println(string(feedback), err)
+	log.Println(string(feedback), err)
 
 	c.Writer.Write(feedback)
 }

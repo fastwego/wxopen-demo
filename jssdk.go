@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"strconv"
 	"time"
 
@@ -62,7 +63,7 @@ func Demo(c *gin.Context) {
 	plain := "jsapi_ticket=" + jsapi_ticket + "&noncestr=" + nonceStr + "&timestamp=" + timestamp + "&url=" + pageUrl
 
 	signature := fmt.Sprintf("%x", sha1.Sum([]byte(plain)))
-	fmt.Println(plain, signature)
+	log.Println(plain, signature)
 
 	configMap := map[string]string{
 		"url":       pageUrl,
@@ -80,13 +81,13 @@ func Demo(c *gin.Context) {
 	config := template.JS(marshal)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
 	t1, err := template.ParseFiles("jssdk/index.html")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 

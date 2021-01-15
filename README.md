@@ -20,3 +20,9 @@ A demo project for fastwego/wxopen
 - [代 公众号 发起网页授权](oauth.go)
 - [代代 公众号 使用 js-sdk](jssdk.go)
 - [代 小程序 调用接口](mini.go)
+
+### tips
+
+使用前请阅读 官方文档 关于 验证票据（component_verify_ticket）：
+
+https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html

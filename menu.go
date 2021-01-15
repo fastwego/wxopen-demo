@@ -15,7 +15,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/fastwego/offiaccount/apis/menu"
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func MenuDemo(c *gin.Context) {
 	appid := c.Request.URL.Query().Get("appid")
 
 	if len(appid) == 0 {
-		fmt.Println("appid not found")
+		log.Println("appid not found")
 		return
 	}
 

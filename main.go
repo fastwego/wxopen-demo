@@ -16,7 +16,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -66,12 +65,12 @@ func HandleEvent(c *gin.Context) {
 
 		err := myPlatform.ReceiveComponentVerifyTicketHandler(myPlatform, msg.ComponentVerifyTicket)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}
 	err = myPlatform.Server.Response(c.Writer, c.Request, output) // 响应 success
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 }
 
@@ -79,6 +78,13 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger(), gin.Recovery())
+
+	// 参见： https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html
+	/*
+		验证票据（component_verify_ticket），在第三方平台创建审核通过后，微信服务器会向其 ”授权事件接收URL” 每隔 10 分钟以 POST 的方式推送 component_verify_ticket
+
+		接收 POST 请求后，只需直接返回字符串 success
+	*/
 	router.POST("/wechat/Auth/index", HandleEvent)
 
 	// 请求授权

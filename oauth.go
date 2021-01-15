@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/fastwego/wxopen/apis/oauth"
 
@@ -55,7 +56,7 @@ func OauthDemo(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userInfo, err)
+	log.Println(userInfo, err)
 
 	c.Writer.WriteString(fmt.Sprintf("%v %v", userInfo, err))
 	return

@@ -16,7 +16,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/url"
 
 	"github.com/fastwego/wxopen/apis/auth"
@@ -39,13 +39,13 @@ func AuthDemo(c *gin.Context) {
 		}
 		payload, err := json.Marshal(preAuthCodeParams)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 
 		preauthCode, err := auth.CreatePreauthCode(myPlatform, payload)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
 
@@ -55,10 +55,10 @@ func AuthDemo(c *gin.Context) {
 		}{}
 		err = json.Unmarshal(preauthCode, &preAuthCodeJson)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			return
 		}
-		fmt.Println(preAuthCodeJson)
+		log.Println(preAuthCodeJson)
 
 		// 获取 跳转链接
 		params := url.Values{}
@@ -94,7 +94,7 @@ func AuthDemo(c *gin.Context) {
 	}
 	payload, err := json.Marshal(apiQueryAuthParams)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	data, err := auth.ApiQueryAuth(myPlatform, payload)
@@ -115,23 +115,23 @@ func AuthDemo(c *gin.Context) {
 
 	err = json.Unmarshal(data, &apiQueryAuthResp)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
-	fmt.Println(apiQueryAuthResp)
+	log.Println(apiQueryAuthResp)
 
 	// demo 只将 authorizer_access_token 缓存到本地
 	// 实际业务建议存放到 数据库
 	err = myPlatform.Cache.Save("authorizer_access_token:"+apiQueryAuthResp.AuthorizationInfo.AuthorizerAppid, apiQueryAuthResp.AuthorizationInfo.AuthorizerAccessToken, 0)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
 	err = myPlatform.Cache.Save("authorizer_refresh_token:"+apiQueryAuthResp.AuthorizationInfo.AuthorizerAppid, apiQueryAuthResp.AuthorizationInfo.AuthorizerRefreshToken, 0)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -150,12 +150,12 @@ func AuthDemo(c *gin.Context) {
 	}
 	payload, err = json.Marshal(params)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	data, err = auth.ApiGetAuthorizerInfo(myPlatform, payload)
 
-	fmt.Println(string(data), err)
+	log.Println(string(data), err)
 	c.Writer.WriteString(string(data))
 	return
 }
